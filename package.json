@@ -11,5 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.6.4"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.10",
+    "exiftool-vendored": "^25.2.0",
+    "recursive-readdir": "^2.2.3"
   }
 }
