@@ -29,7 +29,7 @@ switch (command) {
 		const input = args[1];
 		
 		exifHandler
-				.setExifDatebyNameMassive(input)
+				.batchUpdateExifDatesFromNames(input)
 				.then(() => console.log("Files changed successfully."))
 				.catch((error) => console.error("Error adjusting files:", error));
 
@@ -46,7 +46,7 @@ switch (command) {
 		const input = args[1];
 
 		exifHandler
-			.setExifDateData(input, date)
+			.updateExifDates(input, date)
 			.then(() => console.log("Files changed successfully."))
 			.catch((error) => console.error("Error adjusting files:", error));
 		break;
@@ -62,7 +62,7 @@ switch (command) {
 		const file = args[1];
 
 		exifHandler
-			.increaseHoursMassive(file, pattern)
+			.batchAdjustExifDatesByHours(file, pattern)
 			.then(() => console.log("Files changed successfully."))
 			.catch((error) => console.error("Error adjusting files:", error));
 		break;
@@ -77,7 +77,7 @@ switch (command) {
 		const folder = args[1];
 
 		exifHandler
-			.renameMassivelyByDate(folder)
+			.batchRenameFilesByDate(folder)
 			.then(() => console.log("Files changed successfully."))
 			.catch((error) => console.error("Error adjusting files:", error));
 

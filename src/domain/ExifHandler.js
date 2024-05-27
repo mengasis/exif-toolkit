@@ -18,7 +18,7 @@ class ExifHandler {
 		return this.reader.readExifData(filePath);
 	}
 
-	async setExifDateData(filePath, date) {
+	async updateExifDates(filePath, date) {
 		const newDateTime = dayjs(date, "YYYY:MM:DD HH:mm:ss");
 
 		const dateFormatted = formatDate(newDateTime)
@@ -38,7 +38,7 @@ class ExifHandler {
 		console.log(`new date: ${dateFormatted}`)
 	}
 
-    async setExifDatebyNameMassive(folder) {
+    async batchUpdateExifDatesFromNames(folder) {
         const files = await getFiles(folder);
 
         for (const [i, file] of files.entries()) {
@@ -48,7 +48,7 @@ class ExifHandler {
         }
 	}
 
-	async increaseHours(filePath, pattern = "") {
+	async adjustExifDatesByHours(filePath, pattern = "") {
 		if (!/^[+-]/.test(pattern)) throw new Error("Invalid pattern");
 
 		const sign = pattern.slice(0, 1);
@@ -78,16 +78,16 @@ class ExifHandler {
 		console.log(`operation ${sign} | old date: ${metadata.ModifyDate} - new date: ${dateFormatted}`)
 	}
 
-    async increaseHoursMassive(folder, pattern){
+    async batchAdjustExifDatesByHours(folder, pattern){
         const files = await getFiles(folder);
 
         for (const [i, file] of files.entries()) {
 			console.log(`Progress: ${i+1}/${files.length}`)
-            await this.increaseHours(file, pattern)
+            await this.adjustExifDatesByHours(file, pattern)
         }
     }
 
-	async renameMassivelyByDate(folder) {
+	async batchRenameFilesByDate(folder) {
 		const files = await getFiles(folder);
 
         for (const [i, file] of files.entries()) {
