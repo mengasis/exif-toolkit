@@ -21,11 +21,11 @@ class ExifHandler {
 	async updateExifDates(filePath, date) {
 		const newDateTime = dayjs(date, "YYYY:MM:DD HH:mm:ss");
 
-		const dateFormatted = formatDate(newDateTime)
+		const dateFormatted = formatDate(newDateTime);
 
 		await this.editor.editExifData(filePath, {
 			DateTimeOriginal: dateFormatted,
-            CreateDate: dateFormatted,
+			CreateDate: dateFormatted,
 			ModifyDate: dateFormatted,
 			FileModifyDate: dateFormatted,
 			FileAccessDate: dateFormatted,
@@ -35,17 +35,17 @@ class ExifHandler {
 			MediaModifyDate: dateFormatted,
 		});
 
-		console.log(`new date: ${dateFormatted}`)
+		console.log(`new date: ${dateFormatted}`);
 	}
 
-    async batchUpdateExifDatesFromNames(folder) {
-        const files = await getFiles(folder);
+	async batchUpdateExifDatesFromNames(folder) {
+		const files = await getFiles(folder);
 
-        for (const [i, file] of files.entries()) {
-			console.log(`Progress: ${i+1}/${files.length}`)
-            const dateTime = decodeDate(path.basename(file))
-			await this.setExifDateData(file, dateTime)
-        }
+		for (const [i, file] of files.entries()) {
+			console.log(`Progress: ${i + 1}/${files.length}`);
+			const dateTime = decodeDate(path.basename(file));
+			await this.setExifDateData(file, dateTime);
+		}
 	}
 
 	async adjustExifDatesByHours(filePath, pattern = "") {
@@ -65,7 +65,7 @@ class ExifHandler {
 			newDateTime = newDateTime.subtract(+hours, "hour");
 		}
 
-		const dateFormatted = formatDate(newDateTime)
+		const dateFormatted = formatDate(newDateTime);
 
 		await this.editor.editExifData(filePath, {
 			AllDates: dateFormatted,
@@ -75,23 +75,25 @@ class ExifHandler {
 			MediaModifyDate: dateFormatted,
 		});
 
-		console.log(`operation ${sign} | old date: ${metadata.ModifyDate} - new date: ${dateFormatted}`)
+		console.log(
+			`operation ${sign} | old date: ${metadata.ModifyDate} - new date: ${dateFormatted}`,
+		);
 	}
 
-    async batchAdjustExifDatesByHours(folder, pattern){
-        const files = await getFiles(folder);
+	async batchAdjustExifDatesByHours(folder, pattern) {
+		const files = await getFiles(folder);
 
-        for (const [i, file] of files.entries()) {
-			console.log(`Progress: ${i+1}/${files.length}`)
-            await this.adjustExifDatesByHours(file, pattern)
-        }
-    }
+		for (const [i, file] of files.entries()) {
+			console.log(`Progress: ${i + 1}/${files.length}`);
+			await this.adjustExifDatesByHours(file, pattern);
+		}
+	}
 
 	async batchRenameFilesByDate(folder) {
 		const files = await getFiles(folder);
 
-        for (const [i, file] of files.entries()) {
-			console.log(`Progress: ${i+1}/${files.length}`)
+		for (const [i, file] of files.entries()) {
+			console.log(`Progress: ${i + 1}/${files.length}`);
 
 			const metadata = await this.getExifData(file);
 			const dateTime = formatDate(metadata.CreateDate);

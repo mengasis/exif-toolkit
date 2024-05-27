@@ -1,5 +1,5 @@
-const path = require('node:path');
-const recursive = require('recursive-readdir');
+const path = require("node:path");
+const recursive = require("recursive-readdir");
 
 async function getFiles(folder) {
 	return await recursive(folder, [

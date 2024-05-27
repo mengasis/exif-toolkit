@@ -6,10 +6,27 @@ const filePaths = args.slice(1);
 
 const exifHandler = new ExifHandler();
 
+const showUsage = () => {
+	console.log(`
+Usage:
+	cli.js show <filePath>                       			- Show file info
+	cli.js set:date <folderPath>           					- Set date for a file based on its filename
+	cli.js set:date:all <folderPath>           				- Set dates from filenames in a folder
+	cli.js adjust:hours:all <folderPath> <timePattern> 		- Adjust dates by hours for all files in a folder
+	cli.js rename:date <folderPath>              			- Rename files by date in a folder
+	cli.js --help                                  			- Show this help message
+`);
+};
+
+if (args.length === 0 || command === "--help" || command === "-h") {
+	showUsage();
+	process.exit(0);
+}
+
 switch (command) {
-	case "read": {
+	case "show": {
 		if (filePaths.length !== 1) {
-			console.error("Usage: cli.js read <filePath>");
+			console.error("Usage: cli.js show <filePath>");
 			process.exit(1);
 		}
 
@@ -17,21 +34,6 @@ switch (command) {
 			.getExifData(filePaths[0])
 			.then((metadata) => console.log(metadata))
 			.catch((error) => console.error("Error reading EXIF:", error));
-
-		break;
-	}
-	case "set-date:filename": {
-		if (filePaths.length < 1) {
-			console.error("Usage: cli.js set-date:filename <folderPath>");
-			process.exit(1);
-		}
-
-		const input = args[1];
-		
-		exifHandler
-				.batchUpdateExifDatesFromNames(input)
-				.then(() => console.log("Files changed successfully."))
-				.catch((error) => console.error("Error adjusting files:", error));
 
 		break;
 	}
@@ -47,14 +49,30 @@ switch (command) {
 
 		exifHandler
 			.updateExifDates(input, date)
-			.then(() => console.log("Files changed successfully."))
-			.catch((error) => console.error("Error adjusting files:", error));
+			.then(() => console.log("File changed successfully."))
+			.catch((error) => console.error("Error setting file date:", error));
 		break;
 	}
 
-	case "set-hour": {
+	case "set:date:all": {
 		if (filePaths.length < 1) {
-			console.error("Usage: cli.js edit <filePath> <timePattern>");
+			console.error("Usage: cli.js set:date:all <folderPath>");
+			process.exit(1);
+		}
+
+		const input = args[1];
+
+		exifHandler
+			.batchUpdateExifDatesFromNames(input)
+			.then(() => console.log("Files changed successfully."))
+			.catch((error) => console.error("Error setting file dates:", error));
+
+		break;
+	}
+
+	case "adjust:hours:all": {
+		if (filePaths.length < 1) {
+			console.error("Usage: cli.js adjust:hours:all <filePath> <timePattern>");
 			process.exit(1);
 		}
 
@@ -68,9 +86,9 @@ switch (command) {
 		break;
 	}
 
-	case "rename": {
+	case "rename:date": {
 		if (filePaths.length < 1) {
-			console.error("Usage: cli.js rename <folderPath>");
+			console.error("Usage: cli.js rename:date <folderPath>");
 			process.exit(1);
 		}
 
